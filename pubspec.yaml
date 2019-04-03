@@ -1,0 +1,20 @@
+name: ml_algo_examples
+version: 0.0.1
+author: Ilia Gyrdymov <ilgyrd@gmail.com>
+description: Usage examples of ml_algo library
+homepage: https://github.com/gyrdym/ml_algo_examples
+
+environment:
+  sdk: '>=2.2.0 <3.0.0'
+
+dependencies:
+  ml_algo: ^10.0.0
+  ml_linalg: ^7.0.0
+  ml_preprocessing: ^3.0.0
+  xrange: ^0.0.5
+
+dev_dependencies:
+  test: ^1.2.0
+  build_runner: ^1.1.2
+  build_test: ^0.10.2
+  pedantic: ^1.4.0
