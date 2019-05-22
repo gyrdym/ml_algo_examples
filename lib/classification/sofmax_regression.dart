@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ml_linalg/matrix.dart';
 import 'package:ml_preprocessing/ml_preprocessing.dart';
 import 'package:ml_algo/ml_algo.dart';
 import 'package:xrange/zrange.dart';
@@ -17,16 +18,17 @@ Future softmaxRegression() async {
   final labels = await data.labels;
 
   final validator = CrossValidator.kFold(numberOfFolds: 5);
-
-  final softmaxRegressor = LinearClassifier.softmaxRegressor(
-      initialLearningRate: 0.03,
-      iterationsLimit: null,
-      minWeightsUpdate: 1e-6,
-      randomSeed: 46,
-      learningRateType: LearningRateType.constant);
-
   final accuracy = validator.evaluate(
-      softmaxRegressor, features, labels, MetricType.accuracy);
+          (Matrix features, Matrix labels) =>
+              SoftmaxRegressor.gradient(
+                features,
+                labels,
+                initialLearningRate: 0.03,
+                iterationsLimit: null,
+                minWeightsUpdate: 1e-6,
+                randomSeed: 46,
+                learningRateType: LearningRateType.constant),
+      features, labels, MetricType.accuracy);
 
   print('Iris dataset, softmax regression: accuracy is '
       '${accuracy.toStringAsFixed(2)}');

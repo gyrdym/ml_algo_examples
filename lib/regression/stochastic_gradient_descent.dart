@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:ml_algo/ml_algo.dart';
+import 'package:ml_linalg/matrix.dart';
 import 'package:ml_preprocessing/ml_preprocessing.dart';
 
 Future bostonHousingRegression() async {
@@ -17,16 +18,17 @@ Future bostonHousingRegression() async {
   final folds = 5;
   final validator = CrossValidator.kFold(numberOfFolds: folds);
 
-  final regressor = LinearRegressor.gradient(
-      gradientType: GradientType.stochastic,
-      iterationsLimit: 100,
-      initialLearningRate: 5.0,
-      minWeightsUpdate: 1e-4,
-      randomSeed: 20,
-      learningRateType: LearningRateType.constant);
-
   final error =
-    validator.evaluate(regressor, features, labels, MetricType.mape);
+    validator.evaluate((Matrix features, Matrix outcomes) =>
+        LinearRegressor.gradient(
+            features,
+            outcomes,
+            iterationsLimit: 100,
+            initialLearningRate: 5.0,
+            minWeightsUpdate: 1e-4,
+            randomSeed: 20,
+            learningRateType: LearningRateType.constant),
+        features, labels, MetricType.mape);
 
   print('Linear regression on Boston housing dataset, label - `medv`, MAPE '
       'error on k-fold validation ($folds folds): '
