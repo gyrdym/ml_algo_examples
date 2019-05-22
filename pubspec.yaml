@@ -5,12 +5,12 @@ description: Usage examples of ml_algo library
 homepage: https://github.com/gyrdym/ml_algo_examples
 
 environment:
-  sdk: '>=2.2.0 <3.0.0'
+  sdk: '>=2.3.0 <3.0.0'
 
 dependencies:
-  ml_algo: ^10.2.0
-  ml_linalg: ^9.0.0
-  ml_preprocessing: ^3.2.0
+  ml_algo: ^12.0.0
+  ml_linalg: ^10.0.0
+  ml_preprocessing: ^3.3.0
   xrange: ^0.0.5
 
 dev_dependencies:
