@@ -1,19 +1,19 @@
-import 'dart:async';
-
 import 'package:ml_algo/ml_algo.dart';
+import 'package:ml_dataframe/ml_dataframe.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_preprocessing/ml_preprocessing.dart';
+import 'package:xrange/zrange.dart';
 
 Future bostonHousingRegression() async {
-  final data = DataFrame.fromCsv('lib/_datasets/housing.csv',
-    headerExists: false,
-    fieldDelimiter: ' ',
-    labelIdx: 13,
-  );
+  final data = await fromCsv('lib/_datasets/housing.csv',
+      headerExists: false,
+      columnDelimiter: ' ');
 
-  final features = (await data.features)
-      .mapColumns((column) => column.normalize());
-  final labels = await data.labels;
+  final normalized = Normalizer().process(data);
+  final asMatrix = normalized.toMatrix();
+
+  final features = asMatrix.submatrix(columns: ZRange.closed(0, 12));
+  final labels = asMatrix.submatrix(columns: ZRange.singleton(13));
 
   final folds = 5;
   final validator = CrossValidator.kFold(numberOfFolds: folds);

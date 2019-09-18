@@ -1,16 +1,17 @@
-import 'dart:async';
-
 import 'package:ml_algo/ml_algo.dart';
+import 'package:ml_dataframe/ml_dataframe.dart';
 import 'package:ml_linalg/matrix.dart';
-import 'package:ml_preprocessing/ml_preprocessing.dart';
 import 'package:xrange/zrange.dart';
 
 Future main() async {
-  final data = DataFrame.fromCsv('lib/_datasets/advertising.csv',
-      columns: [ZRange.closed(1, 4)], labelName: 'Sales');
-  final features = await data.features;
-  final labels = await data.labels;
+  final data = await fromCsv('lib/_datasets/advertising.csv',
+      columns: [1, 2, 3, 4]);
+
+  final features = data.toMatrix().submatrix(columns: ZRange.closed(0, 2));
+  final labels = data.toMatrix().submatrix(columns: ZRange.singleton(3));
+
   final validator = CrossValidator.kFold(numberOfFolds: 5);
+
   final error = validator.evaluate((Matrix features, Matrix outcomes) =>
       LinearRegressor.coordinate(
           features,
