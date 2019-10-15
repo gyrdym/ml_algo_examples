@@ -21,17 +21,30 @@ Future softmaxRegression() async {
     numberOfFolds: 5,
   );
 
+  final predictorFactory = (trainSamples, _) =>
+      SoftmaxRegressor(
+        trainSamples,
+        ['Iris-setosa', 'Iris-versicolor', 'Iris-virginica'],
+        initialLearningRate: 0.03,
+        iterationsLimit: 200,
+        minCoefficientsUpdate: 1e-6,
+        randomSeed: 46,
+        learningRateType: LearningRateType.constant,
+      );
+
+  final onDataSplit = (trainData, testData) {
+    final standardizer = Standardizer(trainData);
+    return [
+      standardizer.process(trainData),
+      standardizer.process(testData),
+    ];
+  };
+
   final accuracy = validator.evaluate(
-          (trainSamples, targetNames) =>
-            SoftmaxRegressor(
-                trainSamples,
-                targetNames,
-                initialLearningRate: 0.03,
-                iterationsLimit: 200,
-                minCoefficientsUpdate: 1e-6,
-                randomSeed: 46,
-                learningRateType: LearningRateType.constant),
-      MetricType.accuracy);
+    predictorFactory,
+    MetricType.accuracy,
+    onDataSplit: onDataSplit,
+  );
 
   print('Iris dataset, softmax regression: accuracy is '
       '${accuracy.toStringAsFixed(2)}');

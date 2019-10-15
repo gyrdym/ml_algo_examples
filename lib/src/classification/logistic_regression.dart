@@ -12,20 +12,39 @@ Future binaryClassification() async {
     numberOfFolds: 5,
   );
 
+  final logisticRegressorFactory = (trainSamples, targetNames) =>
+      LogisticRegressor(
+        trainSamples,
+        targetNames.first,
+        optimizerType: LinearOptimizerType.gradient,
+        initialLearningRate: 0.01,
+        iterationsLimit: 100,
+        minCoefficientsUpdate: null,
+        fitIntercept: true,
+        interceptScale: 1,
+        batchSize: trainSamples.rows.length,
+        learningRateType: LearningRateType.constant,
+      );
+
+  final onDataSplit = (trainData, testData) {
+    final pipeline = Pipeline(trainData, [
+      standardize(),
+    ]);
+
+    final trainDataTransformed = pipeline.process(trainData);
+    final testDataTransformed = pipeline.process(testData);
+
+    return [
+      trainDataTransformed,
+      testDataTransformed,
+    ];
+  };
+
   final accuracy = validator.evaluate(
-          (trainSamples, targetNames) =>
-              LogisticRegressor(
-                  trainSamples,
-                  targetNames.first,
-                  optimizerType: LinearOptimizerType.gradient,
-                  initialLearningRate: .8,
-                  iterationsLimit: 500,
-                  fitIntercept: true,
-                  interceptScale: 2,
-                  batchSize: trainSamples.rows.length,
-                  learningRateType: LearningRateType.constant,
-              ),
-      MetricType.accuracy);
+    logisticRegressorFactory,
+    MetricType.accuracy,
+    onDataSplit: onDataSplit,
+  );
 
   print('Pima indians diabetes dataset, binary classification: accuracy is '
       '${accuracy.toStringAsFixed(3)}');
