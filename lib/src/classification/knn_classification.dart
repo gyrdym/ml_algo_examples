@@ -20,13 +20,12 @@ Future knnClassification() async {
     numberOfFolds: 7,
   );
 
-  final accuracy = validator.evaluate(
-        (trainSamples, targetNames) =>
-        KnnClassifier(
-          trainSamples,
-          'Species',
-          5,
-        ),
+  final accuracy = validator.evaluate((trainSamples, targetNames) =>
+      KnnClassifier(
+        trainSamples,
+        'Species',
+        5,
+      ),
     MetricType.accuracy,
   );
 

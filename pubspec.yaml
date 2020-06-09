@@ -8,7 +8,7 @@ environment:
   sdk: '>=2.3.0 <3.0.0'
 
 dependencies:
-  ml_algo: ^13.8.0
+  ml_algo: ^13.9.0
   ml_dataframe: 0.1.1
   ml_linalg: ^12.17.0
   ml_preprocessing: ^5.1.0

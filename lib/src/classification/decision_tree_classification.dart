@@ -2,7 +2,7 @@ import 'package:ml_algo/ml_algo.dart';
 import 'package:ml_dataframe/ml_dataframe.dart';
 import 'package:ml_preprocessing/ml_preprocessing.dart';
 
-Future decisionTreeRegression() async {
+Future decisionTreeClassification() async {
   final samples = (await fromCsv('lib/_datasets/iris.csv'))
       .dropSeries(seriesNames: ['Id']);
 
@@ -34,4 +34,8 @@ Future decisionTreeRegression() async {
 
   print('Iris dataset, decision tree classifier: accuracy is '
       '${accuracy.toStringAsFixed(2)}');
+}
+
+void main() async {
+  await decisionTreeClassification();
 }

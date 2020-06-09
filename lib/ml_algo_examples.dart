@@ -7,8 +7,8 @@ import 'package:ml_algo_examples/src/regression/lasso_regression.dart';
 import 'package:ml_algo_examples/src/regression/stochastic_gradient_descent.dart';
 
 void main() async {
-  await decisionTreeRegression();
-  await binaryClassification();
+  await decisionTreeClassification();
+  await logisticRegression();
   await knnClassification();
   await softmaxRegression();
   await knnRegression();

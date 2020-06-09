@@ -10,7 +10,6 @@ Future softmaxRegression() async {
     encodeAsOneHotLabels(
         featureNames: ['Species'],
     ),
-    normalize(),
   ]);
 
   final processed = pipeline.process(samples);
@@ -25,25 +24,15 @@ Future softmaxRegression() async {
       SoftmaxRegressor(
         trainSamples,
         ['Iris-setosa', 'Iris-versicolor', 'Iris-virginica'],
-        initialLearningRate: 0.03,
-        iterationsLimit: 200,
-        minCoefficientsUpdate: 1e-6,
-        randomSeed: 46,
+        initialLearningRate: 0.035,
+        iterationsLimit: 5000,
+        minCoefficientsUpdate: null,
         learningRateType: LearningRateType.constant,
       );
-
-  final onDataSplit = (trainData, testData) {
-    final standardizer = Standardizer(trainData);
-    return [
-      standardizer.process(trainData),
-      standardizer.process(testData),
-    ];
-  };
 
   final accuracy = validator.evaluate(
     predictorFactory,
     MetricType.accuracy,
-    onDataSplit: onDataSplit,
   );
 
   print('Iris dataset, softmax regression: accuracy is '
