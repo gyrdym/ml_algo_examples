@@ -1,36 +1,32 @@
 import 'package:ml_algo/ml_algo.dart';
 import 'package:ml_dataframe/ml_dataframe.dart';
-import 'package:ml_linalg/dtype.dart';
 
 Future logisticRegression() async {
   final samples = await fromCsv('lib/_datasets/pima_indians_diabetes_database.csv');
-
+  final numberOfFolds = 5;
   final validator = CrossValidator.kFold(
     samples,
     ['class variable (0 or 1)'],
-    numberOfFolds: 5,
+    numberOfFolds: numberOfFolds,
   );
-
-  final logisticRegressorFactory = (trainSamples, targetNames) {
-    final classifier = LogisticRegressor(
+  final logisticRegressorFactory = (trainSamples, targetNames) =>
+    LogisticRegressor(
       trainSamples,
       targetNames.first,
-      optimizerType: LinearOptimizerType.gradient,
       learningRateType: LearningRateType.decreasingAdaptive,
       probabilityThreshold: 0.7,
-      collectLearningData: true,
+      fitIntercept: true,
+      interceptScale: .1,
+      randomSeed: 3,
     );
-
-    return classifier;
-  };
-
-  final accuracy = validator.evaluate(
+  final scores = await validator.evaluate(
     logisticRegressorFactory,
     MetricType.accuracy,
   );
 
-  print('Pima indians diabetes dataset, binary classification: accuracy is '
-      '${accuracy.toStringAsFixed(5)}');
+  print('Pima indians diabetes dataset, logistic regression: accuracy on '
+      'k-fold validation ($numberOfFolds folds): '
+      '${scores.mean().toStringAsFixed(2)}');
 }
 
 Future main() async {

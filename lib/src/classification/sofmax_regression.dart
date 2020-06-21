@@ -5,21 +5,18 @@ import 'package:ml_preprocessing/ml_preprocessing.dart';
 Future softmaxRegression() async {
   final samples = (await fromCsv('lib/_datasets/iris.csv'))
       .dropSeries(seriesNames: ['Id']);
-
   final pipeline = Pipeline(samples, [
     encodeAsOneHotLabels(
         featureNames: ['Species'],
     ),
   ]);
-
   final processed = pipeline.process(samples);
-
+  final numberOfFolds = 5;
   final validator = CrossValidator.kFold(
     processed,
     ['Iris-setosa', 'Iris-versicolor', 'Iris-virginica'],
-    numberOfFolds: 5,
+    numberOfFolds: numberOfFolds,
   );
-
   final predictorFactory = (trainSamples, _) =>
       SoftmaxRegressor(
         trainSamples,
@@ -29,14 +26,13 @@ Future softmaxRegression() async {
         minCoefficientsUpdate: null,
         learningRateType: LearningRateType.constant,
       );
-
-  final accuracy = validator.evaluate(
+  final scores = await validator.evaluate(
     predictorFactory,
     MetricType.accuracy,
   );
 
-  print('Iris dataset, softmax regression: accuracy is '
-      '${accuracy.toStringAsFixed(2)}');
+  print('Iris dataset, softmax regression: accuracy on k-fold validation '
+      '($numberOfFolds folds): ${scores.mean().toStringAsFixed(2)}');
 }
 
 Future main() async {

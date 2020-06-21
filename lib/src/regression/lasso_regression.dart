@@ -11,7 +11,7 @@ Future lassoRegression() async {
     numberOfFolds: 5,
   );
 
-  final error = validator.evaluate((trainSamples, targetNames) =>
+  final scores = await validator.evaluate((trainSamples, targetNames) =>
       LinearRegressor(
           trainSamples,
           targetNames.first,
@@ -20,5 +20,5 @@ Future lassoRegression() async {
           lambda: 46420.0),
       MetricType.mape);
 
-  print('Lasso regression, error: ${error.toStringAsFixed(2)}%');
+  print('Lasso regression, error: ${scores.mean().toStringAsFixed(2)}%');
 }

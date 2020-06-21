@@ -19,11 +19,10 @@ Future knnRegression() async {
     dtype: DType.float64,
   );
 
-  final error =
-    validator.evaluate((trainSamples, targetNames) =>
+  final scores =
+    await validator.evaluate((trainSamples, targetNames) =>
         KnnRegressor(trainSamples, targetNames.first, folds), MetricType.mape);
 
-  print('KNN regression on Boston housing dataset, label - `medv`, MAPE '
-      'error on k-fold validation ($folds folds): '
-      '${error.toStringAsFixed(2)}%');
+  print('Boston housing dataset, KNN regression, MAPE error on k-fold '
+      'validation ($folds folds): ${scores.mean().toStringAsFixed(2)}%');
 }

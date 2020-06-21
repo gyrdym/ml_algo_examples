@@ -5,32 +5,32 @@ import 'package:ml_preprocessing/ml_preprocessing.dart';
 Future knnClassification() async {
   final samples = (await fromCsv('lib/_datasets/iris.csv'))
       .dropSeries(seriesNames: ['Id']);
-
   final pipeline = Pipeline(samples, [
     encodeAsIntegerLabels(
       featureNames: ['Species'],
     ),
   ]);
-
   final processed = pipeline.process(samples);
-
+  final numberOfFolds = 7;
+  final numberOfNeighbours = 5;
   final validator = CrossValidator.kFold(
     processed,
     ['Species'],
-    numberOfFolds: 7,
+    numberOfFolds: numberOfFolds,
   );
-
-  final accuracy = validator.evaluate((trainSamples, targetNames) =>
+  final createClassifier = (trainSamples, targetNames) =>
       KnnClassifier(
         trainSamples,
         'Species',
-        5,
-      ),
+        numberOfNeighbours,
+      );
+  final scores = await validator.evaluate(
+    createClassifier,
     MetricType.accuracy,
   );
 
-  print('Iris dataset, KNN classifier, accuracy is '
-      '${accuracy.toStringAsFixed(2)}');
+  print('Iris dataset, KNN classification: accuracy on k-fold validation '
+      '($numberOfFolds folds): ${scores.mean().toStringAsFixed(2)}');
 }
 
 void main() async {

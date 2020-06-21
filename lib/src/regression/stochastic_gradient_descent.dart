@@ -11,20 +11,18 @@ Future sgdRegression() async {
     ['col_13'],
     numberOfFolds: folds,
   );
-  final error =
-    validator.evaluate((trainSamples, targetNames) =>
-        LinearRegressor(
-            trainSamples,
-            targetNames.first,
-            optimizerType: LinearOptimizerType.gradient,
-            initialLearningRate: 0.00000385,
-            randomSeed: 2,
-            learningRateType: LearningRateType.decreasingAdaptive),
-        MetricType.mape);
+  final createRegressor = (DataFrame trainSamples, targetNames) =>
+      LinearRegressor(
+          trainSamples,
+          targetNames.first,
+          optimizerType: LinearOptimizerType.gradient,
+          initialLearningRate: 0.00000385,
+          randomSeed: 2,
+          learningRateType: LearningRateType.decreasingAdaptive);
+  final scores = await validator.evaluate(createRegressor, MetricType.mape);
 
-  print('SGD regression on Boston housing dataset, label - `medv`, MAPE '
-      'error on k-fold validation ($folds folds): '
-      '${error.toStringAsFixed(2)}%');
+  print('Boston housing dataset, SGD regression, MAPE error on k-fold '
+      'validation ($folds folds): ${scores.mean().toStringAsFixed(2)}%');
 }
 
 void main() async {
