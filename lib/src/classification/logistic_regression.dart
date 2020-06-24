@@ -1,7 +1,7 @@
 import 'package:ml_algo/ml_algo.dart';
 import 'package:ml_dataframe/ml_dataframe.dart';
 
-Future logisticRegression() async {
+void logisticRegression() async {
   final samples = await fromCsv('lib/_datasets/pima_indians_diabetes_database.csv');
   final splits = splitData(samples, [0.7]);
   final validationData = splits[0];
@@ -17,10 +17,11 @@ Future logisticRegression() async {
     LogisticRegressor(
       trainSamples,
       targetNames.first,
-      fitIntercept: true,
-      interceptScale: 200,
+      optimizerType: LinearOptimizerType.gradient,
+      iterationsLimit: 90,
       learningRateType: LearningRateType.decreasingAdaptive,
       batchSize: trainSamples.rows.length,
+      probabilityThreshold: 0.7,
     );
   final scores = await validator.evaluate(
     createClassifier,
