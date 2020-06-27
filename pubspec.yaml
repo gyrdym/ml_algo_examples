@@ -8,10 +8,10 @@ environment:
   sdk: '>=2.3.0 <3.0.0'
 
 dependencies:
-  ml_algo: ^14.2.0
-  ml_dataframe: 0.1.1
+  ml_algo: ^14.2.2
+  ml_dataframe: ^0.2.0
   ml_linalg: ^12.17.1
-  ml_preprocessing: ^5.1.0
+  ml_preprocessing: ^5.1.2
   xrange: ^0.0.8
 
 dev_dependencies:
